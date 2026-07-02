@@ -35,7 +35,11 @@ function Cart() {
 
             return (
               <div key={item.id} className="cart-item">
-                <img src={item.image} alt={item.name} className="cart-item__image" />
+                {item.image_url ? (
+                  <img src={item.image_url} alt={item.name} className="cart-item__image" />
+                ) : (
+                  <span style={{ fontSize: '32px' }}>🧴</span>
+                )}
 
                 <div className="cart-item__info">
                   <h3 className="cart-item__name">{item.name}</h3>
