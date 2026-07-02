@@ -1,0 +1,51 @@
+.order-confirmed {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 0;
+}
+
+.order-confirmed__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--color-gold);
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.order-confirmed h1 {
+  font-size: 28px;
+  color: var(--color-gold-light);
+  margin-bottom: 16px;
+}
+
+.order-confirmed p {
+  font-size: 15px;
+  color: var(--color-bronze);
+  max-width: 420px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.back-to-home-btn {
+  background-color: var(--color-gold);
+  color: var(--color-black);
+  padding: 14px 32px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.back-to-home-btn:hover {
+  background-color: var(--color-gold-light);
+}

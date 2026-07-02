@@ -1,0 +1,58 @@
+.hero {
+  text-align: center;
+  padding: 56px 0 40px;
+}
+
+.hero__logo {
+  max-width: 280px;
+  width: 100%;
+  margin: 0 auto 16px;
+}
+
+.hero__subtitle {
+  font-size: 14px;
+  color: var(--color-bronze);
+  letter-spacing: 0.05em;
+}
+
+.categories__list {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.category-pill {
+  padding: 10px 20px;
+  border: 1px solid rgba(201, 161, 74, 0.4);
+  border-radius: 999px;
+  color: var(--color-gold-light);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.category-pill:hover {
+  border-color: var(--color-gold);
+}
+
+.category-pill--active {
+  background-color: var(--color-gold);
+  color: var(--color-black);
+  border-color: var(--color-gold);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  padding-bottom: 64px;
+}
+
+.loading-text {
+  color: var(--color-bronze);
+  text-align: center;
+  padding: 40px 0;
+  grid-column: 1 / -1;
+}
