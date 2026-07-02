@@ -12,6 +12,7 @@ const departamentos = [
 function Checkout() {
   const { cartItems, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
+  const [paymentMethod, setPaymentMethod] = useState('contraentrega');
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -44,7 +45,10 @@ function Checkout() {
 
   function buildOrderSummary() {
     return cartItems
-      .map((item) => `${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString('es-CO')}`)
+      .map((item) => {
+        const finalPrice = item.on_sale && item.discount_price ? item.discount_price : item.price;
+        return `${item.name} x${item.quantity} - $${(finalPrice * item.quantity).toLocaleString('es-CO')}`;
+      })
       .join('\n');
   }
 
@@ -65,6 +69,9 @@ function Checkout() {
       poblacion: formData.poblacion,
       departamento: formData.departamento,
       notas: formData.notas || 'Sin notas',
+      metodo_pago: paymentMethod === 'contraentrega' ? 'Contraentrega' :
+                   paymentMethod === 'nequi' ? 'Nequi / Daviplata' :
+                   'PSE / Transferencia bancaria',
       pedido: buildOrderSummary(),
       total: `$${totalPrice.toLocaleString('es-CO')}`,
     };
@@ -151,6 +158,56 @@ function Checkout() {
             </div>
 
             <div className="form-field">
+              <label>Método de pago *</label>
+              <div className="payment-methods">
+                <label className={`payment-option ${paymentMethod === 'contraentrega' ? 'payment-option--active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="contraentrega"
+                    checked={paymentMethod === 'contraentrega'}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <span className="payment-option__icon">🚚</span>
+                  <div>
+                    <strong>Contraentrega</strong>
+                    <p>Pagas cuando recibes tu pedido</p>
+                  </div>
+                </label>
+
+                <label className={`payment-option ${paymentMethod === 'nequi' ? 'payment-option--active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="nequi"
+                    checked={paymentMethod === 'nequi'}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <span className="payment-option__icon">📱</span>
+                  <div>
+                    <strong>Nequi / Daviplata</strong>
+                    <p>Te enviamos el número por WhatsApp</p>
+                  </div>
+                </label>
+
+                <label className={`payment-option ${paymentMethod === 'pse' ? 'payment-option--active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="pse"
+                    checked={paymentMethod === 'pse'}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <span className="payment-option__icon">🏦</span>
+                  <div>
+                    <strong>PSE / Transferencia</strong>
+                    <p>Te enviamos los datos bancarios por WhatsApp</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div className="form-field">
               <label>Notas sobre tu pedido (opcional)</label>
               <textarea
                 name="notas"
@@ -178,12 +235,15 @@ function Checkout() {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.name} × {item.quantity}</td>
-                    <td>${(item.price * item.quantity).toLocaleString('es-CO')}</td>
-                  </tr>
-                ))}
+                {cartItems.map((item) => {
+                  const finalPrice = item.on_sale && item.discount_price ? item.discount_price : item.price;
+                  return (
+                    <tr key={item.id}>
+                      <td>{item.name} × {item.quantity}</td>
+                      <td>${(finalPrice * item.quantity).toLocaleString('es-CO')}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
 
@@ -193,8 +253,13 @@ function Checkout() {
             </div>
 
             <div className="checkout-summary__payment">
-              <strong>Pago</strong>
-              <p>Contraentrega o transferencia/Nequi. Coordinamos por WhatsApp al confirmar tu pedido.</p>
+              <strong>Método seleccionado</strong>
+              <p>
+                {paymentMethod === 'contraentrega' && '🚚 Contraentrega'}
+                {paymentMethod === 'nequi' && '📱 Nequi / Daviplata'}
+                {paymentMethod === 'pse' && '🏦 PSE / Transferencia'}
+              </p>
+              <p style={{ marginTop: '8px' }}>Coordinamos los detalles por WhatsApp al confirmar.</p>
             </div>
           </div>
         </div>
