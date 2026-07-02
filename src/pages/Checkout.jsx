@@ -87,7 +87,7 @@ function Checkout() {
 
       if (result.success) {
         clearCart();
-        navigate('/pedido-confirmado');
+        navigate(`/pedido-confirmado?tel=${formData.telefono}&pago=${paymentMethod}`);
       } else {
         setError('No se pudo enviar el pedido. Intenta de nuevo.');
       }
