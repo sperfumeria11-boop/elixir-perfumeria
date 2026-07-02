@@ -18,6 +18,7 @@ function Checkout() {
     nombre: '',
     apellidos: '',
     telefono: '',
+    cedula: '',
     direccion: '',
     apartamento: '',
     poblacion: '',
@@ -64,12 +65,13 @@ function Checkout() {
       nombre: formData.nombre,
       apellidos: formData.apellidos,
       telefono: formData.telefono,
+      cedula: formData.cedula,
       direccion: formData.direccion,
       apartamento: formData.apartamento || 'N/A',
       poblacion: formData.poblacion,
       departamento: formData.departamento,
       notas: formData.notas || 'Sin notas',
-      metodo_pago: paymentMethod === 'contraentrega' ? 'Contraentrega' :
+      metodo_pago: paymentMethod === 'contraentrega' ? 'Contraentrega 50/50' :
                    paymentMethod === 'nequi' ? 'Nequi / Daviplata' :
                    'PSE / Transferencia bancaria',
       pedido: buildOrderSummary(),
@@ -120,9 +122,15 @@ function Checkout() {
               </div>
             </div>
 
-            <div className="form-field">
-              <label>Teléfono / WhatsApp *</label>
-              <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} required />
+            <div className="form-row">
+              <div className="form-field">
+                <label>Teléfono / WhatsApp *</label>
+                <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} required />
+              </div>
+              <div className="form-field">
+                <label>Número de cédula *</label>
+                <input type="text" name="cedula" value={formData.cedula} onChange={handleChange} required placeholder="Ej: 1234567890" />
+              </div>
             </div>
 
             <div className="form-field">
@@ -170,8 +178,8 @@ function Checkout() {
                   />
                   <span className="payment-option__icon">🚚</span>
                   <div>
-                    <strong>Contraentrega</strong>
-                    <p>Pagas cuando recibes tu pedido</p>
+                    <strong>Contraentrega 50/50</strong>
+                    <p>50% al confirmar el pedido, 50% al recibir</p>
                   </div>
                 </label>
 
@@ -255,7 +263,7 @@ function Checkout() {
             <div className="checkout-summary__payment">
               <strong>Método seleccionado</strong>
               <p>
-                {paymentMethod === 'contraentrega' && '🚚 Contraentrega'}
+                {paymentMethod === 'contraentrega' && '🚚 Contraentrega 50/50'}
                 {paymentMethod === 'nequi' && '📱 Nequi / Daviplata'}
                 {paymentMethod === 'pse' && '🏦 PSE / Transferencia'}
               </p>

@@ -10,6 +10,7 @@ function Home() {
   const [activeCategory, setActiveCategory] = useState('todos');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     async function fetchProducts() {
@@ -20,10 +21,9 @@ function Home() {
     fetchProducts();
   }, []);
 
-  const filteredProducts =
-    activeCategory === 'todos'
-      ? products
-      : products.filter((product) => product.category === activeCategory);
+  const filteredProducts = products
+    .filter((p) => activeCategory === 'todos' || p.category === activeCategory)
+    .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <>
@@ -32,7 +32,7 @@ function Home() {
       <header className="hero">
         <div className="container">
           <img src={logo} alt="Elixir Perfumería" className="hero__logo" />
-          <p className="hero__subtitle">Perfumes originales y decants · Envíos a todo el país</p>
+          <p className="hero__subtitle">Perfumes 1.1 premium · Envíos a todo el país</p>
         </div>
       </header>
 
@@ -56,11 +56,21 @@ function Home() {
         </div>
       </section>
 
+      <div className="container search-bar-wrap">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="🔍 Buscar perfume..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
       <main className="container product-grid">
         {loading ? (
           <p className="loading-text">Cargando productos...</p>
         ) : filteredProducts.length === 0 ? (
-          <p className="loading-text">No hay productos en esta categoría.</p>
+          <p className="loading-text">No se encontraron productos.</p>
         ) : (
           filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />

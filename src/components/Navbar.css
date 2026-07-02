@@ -51,3 +51,9 @@
   align-items: center;
   justify-content: center;
 }
+
+@media (max-width: 768px) {
+  .navbar__home-link {
+    font-size: 11px;
+  }
+}

@@ -18,8 +18,8 @@ function OrderConfirmed() {
   const content = {
     contraentrega: {
       title: '¡Pedido confirmado!',
-      text: 'Tu pedido está listo. Te contactaremos pronto para coordinar la fecha y hora de entrega.',
-      cta: '📦 Confirmar entrega por WhatsApp',
+      text: 'Tu pedido está listo. El pago es 50% al confirmar el pedido y 50% al recibir. Te contactaremos pronto para coordinar la entrega.',
+      cta: '📦 Coordinar entrega y pago por WhatsApp',
     },
     nequi: {
       title: '¡Pedido confirmado!',

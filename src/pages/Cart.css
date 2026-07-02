@@ -123,3 +123,33 @@
   flex-direction: column;
   gap: 16px;
 }
+
+@media (max-width: 768px) {
+  .cart-item {
+    grid-template-columns: 48px 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 8px;
+  }
+
+  .cart-item__image {
+    width: 48px;
+    height: 48px;
+  }
+
+  .cart-item__subtotal {
+    grid-column: 3;
+    grid-row: 2;
+    min-width: unset;
+  }
+
+  .cart-item__remove {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .cart-item__quantity {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-content: flex-start;
+  }
+}

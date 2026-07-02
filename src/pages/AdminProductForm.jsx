@@ -138,7 +138,8 @@ function AdminProductForm() {
                 <select name="category" value={form.category} onChange={handleChange} required>
                   <option value="dama">Dama</option>
                   <option value="caballero">Caballero</option>
-                  <option value="arabes">Árabes</option>
+                  <option value="arabes_dama">Árabes Dama</option>
+                  <option value="arabes_caballero">Árabes Caballero</option>
                 </select>
               </div>
               <div className="form-field">

@@ -142,3 +142,17 @@
   display: block;
   margin-bottom: 6px;
 }
+
+@media (max-width: 768px) {
+  .checkout__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-summary {
+    order: -1;
+  }
+}
