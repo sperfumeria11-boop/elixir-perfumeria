@@ -3,8 +3,10 @@ import lacostYellow from '../assets/Lacoste_yellow.png';
 export const categories = [
   { id: 'dama', name: 'Dama', icon: '🌸' },
   { id: 'caballero', name: 'Caballero', icon: '🖤' },
+  { id: 'unisex', name: 'Unisex', icon: '✨' },
   { id: 'arabes_dama', name: 'Árabes Dama', icon: '🌙' },
   { id: 'arabes_caballero', name: 'Árabes Caballero', icon: '🌙' },
+  { id: 'arabes_unisex', name: 'Árabes Unisex', icon: '🌙' },
 ];
 
 export const products = [

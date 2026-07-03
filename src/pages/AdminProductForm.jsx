@@ -139,7 +139,9 @@ function AdminProductForm() {
                   <option value="dama">Dama</option>
                   <option value="caballero">Caballero</option>
                   <option value="arabes_dama">Árabes Dama</option>
+                  <option value="unisex">Unisex</option>
                   <option value="arabes_caballero">Árabes Caballero</option>
+                  <option value="arabes_unisex">Árabes Unisex</option>
                 </select>
               </div>
               <div className="form-field">
