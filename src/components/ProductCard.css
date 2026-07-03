@@ -1,6 +1,6 @@
 .product-card {
   display: block;
-  background-color: var(--color-cream);
+  background-color: #FFFFFF;
   border-radius: 4px;
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -86,4 +86,14 @@
   font-size: 16px;
   font-weight: 700;
   color: var(--color-gold);
+}
+
+@media (max-width: 768px) {
+  .product-card__name {
+    font-size: 13px;
+  }
+
+  .product-card__price {
+    font-size: 13px;
+  }
 }
