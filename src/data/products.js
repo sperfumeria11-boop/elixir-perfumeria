@@ -1,10 +1,10 @@
 import lacostYellow from '../assets/Lacoste_yellow.png';
 
 export const categories = [
-  { id: 'dama', name: 'Dama', icon: '🌸' },
-  { id: 'caballero', name: 'Caballero', icon: '🖤' },
-  { id: 'arabes_dama', name: 'Árabes Dama', icon: '🌙' },
-  { id: 'arabes_caballero', name: 'Árabes Caballero', icon: '🌙' },
+  { id: 'dama', name: 'Dama', icon: '🌸', includes: ['dama', 'unisex'] },
+  { id: 'caballero', name: 'Caballero', icon: '🖤', includes: ['caballero', 'unisex'] },
+  { id: 'arabes_dama', name: 'Árabes Dama', icon: '🌙', includes: ['arabes_dama', 'arabes_unisex'] },
+  { id: 'arabes_caballero', name: 'Árabes Caballero', icon: '🌙', includes: ['arabes_caballero', 'arabes_unisex'] },
 ];
 
 export const products = [
@@ -79,7 +79,7 @@ export const products = [
   {
     id: 5,
     name: 'Oud Al Maliki',
-    category: 'arabes',
+    category: 'arabes_dama',
     price: 320000,
     image: null,
     description: 'Una fragancia árabe profunda y especiada, dominada por el oud auténtico.',
