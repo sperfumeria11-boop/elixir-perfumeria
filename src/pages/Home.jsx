@@ -21,8 +21,12 @@ function Home() {
     fetchProducts();
   }, []);
 
+  const activeCategories = activeCategory === 'todos'
+    ? null
+    : categories.find((c) => c.id === activeCategory)?.includes || [activeCategory];
+
   const filteredProducts = products
-    .filter((p) => activeCategory === 'todos' || p.category === activeCategory)
+    .filter((p) => !activeCategories || activeCategories.includes(p.category))
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
