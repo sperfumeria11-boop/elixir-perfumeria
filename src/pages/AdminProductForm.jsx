@@ -21,6 +21,9 @@ const emptyForm = {
   image_url: '',
   on_sale: false,
   discount_price: '',
+  is_featured: false,
+  is_bestseller: false,
+  sort_order: 0,
 };
 
 function AdminProductForm() {
@@ -44,6 +47,9 @@ function AdminProductForm() {
             notes_corazon: product.notes_corazon?.join(', ') || '',
             notes_fondo: product.notes_fondo?.join(', ') || '',
             discount_price: product.discount_price || '',
+            is_featured: product.is_featured || false,
+            is_bestseller: product.is_bestseller || false,
+            sort_order: product.sort_order || 0,
           });
           if (product.image_url) setImagePreview(product.image_url);
         }
@@ -95,6 +101,9 @@ function AdminProductForm() {
       image_url,
       on_sale: form.on_sale,
       discount_price: form.on_sale && form.discount_price ? Number(form.discount_price) : null,
+      is_featured: form.is_featured,
+      is_bestseller: form.is_bestseller,
+      sort_order: Number(form.sort_order),
       notes_salida: form.notes_salida.split(',').map((n) => n.trim()).filter(Boolean),
       notes_corazon: form.notes_corazon.split(',').map((n) => n.trim()).filter(Boolean),
       notes_fondo: form.notes_fondo.split(',').map((n) => n.trim()).filter(Boolean),
@@ -138,8 +147,8 @@ function AdminProductForm() {
                 <select name="category" value={form.category} onChange={handleChange} required>
                   <option value="dama">Dama</option>
                   <option value="caballero">Caballero</option>
-                  <option value="arabes_dama">Árabes Dama</option>
                   <option value="unisex">Unisex</option>
+                  <option value="arabes_dama">Árabes Dama</option>
                   <option value="arabes_caballero">Árabes Caballero</option>
                   <option value="arabes_unisex">Árabes Unisex</option>
                 </select>
@@ -181,6 +190,44 @@ function AdminProductForm() {
                 )}
               </div>
             )}
+
+            <div className="form-field">
+              <label className="promo-label">
+                <input
+                  type="checkbox"
+                  name="is_featured"
+                  checked={form.is_featured}
+                  onChange={handleChange}
+                  className="promo-checkbox"
+                />
+                ⭐ Producto destacado (aparece de primero)
+              </label>
+            </div>
+
+            <div className="form-field">
+              <label className="promo-label">
+                <input
+                  type="checkbox"
+                  name="is_bestseller"
+                  checked={form.is_bestseller}
+                  onChange={handleChange}
+                  className="promo-checkbox"
+                />
+                🔥 Más vendido
+              </label>
+            </div>
+
+            <div className="form-field">
+              <label>Orden de aparición (menor = primero)</label>
+              <input
+                type="number"
+                name="sort_order"
+                value={form.sort_order}
+                onChange={handleChange}
+                placeholder="0"
+                min="0"
+              />
+            </div>
 
             <div className="form-field">
               <label>Descripción</label>

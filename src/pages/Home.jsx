@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
-import { categories } from '../data/products';
+import { categories, specialFilters } from '../data/products';
 import { getProducts } from '../lib/productService';
 import logo from '../assets/logo.jpeg';
 import './Home.css';
@@ -28,12 +28,15 @@ function Home() {
     setVisibleCount(10);
   }, [activeCategory, search]);
 
-  const activeCategories = activeCategory === 'todos'
-    ? null
-    : categories.find((c) => c.id === activeCategory)?.includes || [activeCategory];
-
   const filteredProducts = products
-    .filter((p) => !activeCategories || activeCategories.includes(p.category))
+    .filter((p) => {
+      if (!activeCategory || activeCategory === 'todos') return true;
+      if (activeCategory === 'destacados') return p.is_featured;
+      if (activeCategory === 'mas_vendidos') return p.is_bestseller;
+      if (activeCategory === 'ofertas') return p.on_sale;
+      const cats = categories.find((c) => c.id === activeCategory)?.includes || [activeCategory];
+      return cats.includes(p.category);
+    })
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       const priceA = a.on_sale && a.discount_price ? a.discount_price : a.price;
@@ -90,6 +93,16 @@ function Home() {
               onClick={() => setActiveCategory(cat.id)}
             >
               {cat.icon} {cat.name}
+            </button>
+          ))}
+          <div className="category-divider" />
+          {specialFilters.map((filter) => (
+            <button
+              key={filter.id}
+              className={`category-pill category-pill--special ${activeCategory === filter.id ? 'category-pill--active' : ''}`}
+              onClick={() => setActiveCategory(filter.id)}
+            >
+              {filter.icon} {filter.name}
             </button>
           ))}
         </div>

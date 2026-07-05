@@ -7,6 +7,12 @@ export const categories = [
   { id: 'arabes_caballero', name: 'Árabes Caballero', icon: '🌙', includes: ['arabes_caballero', 'arabes_unisex'] },
 ];
 
+export const specialFilters = [
+  { id: 'destacados', name: 'Destacados', icon: '⭐' },
+  { id: 'mas_vendidos', name: 'Más vendidos', icon: '🔥' },
+  { id: 'ofertas', name: 'Ofertas', icon: '🏷️' },
+];
+
 export const products = [
   {
     id: 1,
@@ -23,74 +29,6 @@ export const products = [
       salida: ['Pomelo', 'Hojas de violeta', 'Hinojo'],
       corazon: ['Jazmín', 'Ylang-Ylang', 'Jengibre'],
       fondo: ['Madera de guayaco', 'Musgo de roble', 'Haba tonka'],
-    },
-  },
-  {
-    id: 2,
-    name: 'Versace Eros',
-    category: 'caballero',
-    price: 295000,
-    image: null,
-    description: 'Una fragancia intensa y seductora con un carácter mediterráneo audaz.',
-    family: 'Amaderada Aromática',
-    duration: '8 - 10 horas',
-    intensity: 'Alta',
-    occasion: 'Noche',
-    notes: {
-      salida: ['Menta', 'Manzana verde', 'Limón'],
-      corazon: ['Geranio', 'Canela', 'Salvia ambrox'],
-      fondo: ['Vainilla', 'Haba tonka', 'Cedro'],
-    },
-  },
-  {
-    id: 3,
-    name: '212 Sexy De Carolina Herrera',
-    category: 'dama',
-    price: 295000,
-    image: null,
-    description: 'Una fragancia floral sensual con un toque moderno y atrevido.',
-    family: 'Floral Afrutada',
-    duration: '6 - 8 horas',
-    intensity: 'Media-Alta',
-    occasion: 'Noche',
-    notes: {
-      salida: ['Mandarina', 'Pera'],
-      corazon: ['Orquídea', 'Jazmín'],
-      fondo: ['Almizcle', 'Sándalo'],
-    },
-  },
-  {
-    id: 4,
-    name: 'Laverne Miss Garden',
-    category: 'dama',
-    price: 175000,
-    image: null,
-    description: 'Un aroma floral fresco inspirado en un jardín en primavera.',
-    family: 'Floral Verde',
-    duration: '5 - 7 horas',
-    intensity: 'Media',
-    occasion: 'Día',
-    notes: {
-      salida: ['Bergamota', 'Hojas verdes'],
-      corazon: ['Rosa', 'Peonía'],
-      fondo: ['Musgo blanco', 'Ámbar'],
-    },
-  },
-  {
-    id: 5,
-    name: 'Oud Al Maliki',
-    category: 'arabes_dama',
-    price: 320000,
-    image: null,
-    description: 'Una fragancia árabe profunda y especiada, dominada por el oud auténtico.',
-    family: 'Amaderada Oriental',
-    duration: '10+ horas',
-    intensity: 'Muy alta',
-    occasion: 'Noche / Ocasiones especiales',
-    notes: {
-      salida: ['Azafrán', 'Cardamomo'],
-      corazon: ['Rosa de Taif', 'Oud'],
-      fondo: ['Ámbar', 'Almizcle', 'Sándalo'],
     },
   },
 ];
