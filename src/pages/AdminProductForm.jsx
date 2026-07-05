@@ -1,305 +1,164 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getProductById, createProduct, updateProduct } from '../lib/productService';
-import './AdminProductForm.css';
+import Navbar from '../components/Navbar';
+import ProductCard from '../components/ProductCard';
+import { categories } from '../data/products';
+import { getProducts } from '../lib/productService';
+import logo from '../assets/logo.jpeg';
+import './Home.css';
+import Reviews from '../components/Reviews';
 
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-const emptyForm = {
-  name: '',
-  category: 'dama',
-  price: '',
-  description: '',
-  family: '',
-  duration: '',
-  intensity: '',
-  occasion: '',
-  notes_salida: '',
-  notes_corazon: '',
-  notes_fondo: '',
-  image_url: '',
-  on_sale: false,
-  discount_price: '',
-  is_featured: false,
-  is_bestseller: false,
-  sort_order: 0,
-};
-
-function AdminProductForm() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const isEditing = id !== 'nuevo';
-
-  const [form, setForm] = useState(emptyForm);
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [loadingProduct, setLoadingProduct] = useState(isEditing);
+function Home() {
+  const [activeCategory, setActiveCategory] = useState('todos');
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [visibleCount, setVisibleCount] = useState(10);
 
   useEffect(() => {
-    if (isEditing) {
-      getProductById(id).then((product) => {
-        if (product) {
-          setForm({
-            ...product,
-            notes_salida: product.notes_salida?.join(', ') || '',
-            notes_corazon: product.notes_corazon?.join(', ') || '',
-            notes_fondo: product.notes_fondo?.join(', ') || '',
-            discount_price: product.discount_price || '',
-            is_featured: product.is_featured || false,
-            is_bestseller: product.is_bestseller || false,
-            sort_order: product.sort_order || 0,
-          });
-          if (product.image_url) setImagePreview(product.image_url);
-        }
-        setLoadingProduct(false);
-      });
+    async function fetchProducts() {
+      const data = await getProducts();
+      setProducts(data);
+      setLoading(false);
     }
-  }, [id]);
+    fetchProducts();
+  }, []);
 
-  function handleChange(e) {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setForm({ ...form, [e.target.name]: value });
-  }
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [activeCategory, search]);
 
-  function handleImageChange(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-  }
-
-  async function uploadImage() {
-    if (!imageFile) return form.image_url;
-    const data = new FormData();
-    data.append('file', imageFile);
-    data.append('upload_preset', UPLOAD_PRESET);
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-      method: 'POST',
-      body: data,
+  const filteredProducts = products
+    .filter((p) => {
+      if (!activeCategory || activeCategory === 'todos') return true;
+      if (activeCategory === 'destacados') return p.is_featured;
+      if (activeCategory === 'mas_vendidos') return p.is_bestseller;
+      if (activeCategory === 'ofertas') return p.on_sale;
+      if (activeCategory === 'precio_asc' || activeCategory === 'precio_desc') return true;
+      const cats = categories.find((c) => c.id === activeCategory)?.includes || [activeCategory];
+      return cats.includes(p.category);
+    })
+    .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      const priceA = a.on_sale && a.discount_price ? a.discount_price : a.price;
+      const priceB = b.on_sale && b.discount_price ? b.discount_price : b.price;
+      if (activeCategory === 'precio_asc') return priceA - priceB;
+      if (activeCategory === 'precio_desc') return priceB - priceA;
+      return 0;
     });
-    const result = await res.json();
-    return result.secure_url;
-  }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
+  const visibleProducts = filteredProducts.slice(0, visibleCount);
 
-    const image_url = await uploadImage();
-
-    const productData = {
-      name: form.name,
-      category: form.category,
-      price: Number(form.price),
-      description: form.description,
-      family: form.family,
-      duration: form.duration,
-      intensity: form.intensity,
-      occasion: form.occasion,
-      image_url,
-      on_sale: form.on_sale,
-      discount_price: form.on_sale && form.discount_price ? Number(form.discount_price) : null,
-      is_featured: form.is_featured,
-      is_bestseller: form.is_bestseller,
-      sort_order: Number(form.sort_order),
-      notes_salida: form.notes_salida.split(',').map((n) => n.trim()).filter(Boolean),
-      notes_corazon: form.notes_corazon.split(',').map((n) => n.trim()).filter(Boolean),
-      notes_fondo: form.notes_fondo.split(',').map((n) => n.trim()).filter(Boolean),
-    };
-
-    if (isEditing) {
-      await updateProduct(id, productData);
-    } else {
-      await createProduct(productData);
-    }
-
-    setLoading(false);
-    navigate('/admin');
-  }
-
-  if (loadingProduct) {
-    return <div className="admin-form-loading">Cargando producto...</div>;
-  }
+  const marqueeText = [
+    'Perfumes 1.1 Premium',
+    'Envíos a todo Colombia',
+    'Elegancia en cada aroma',
+    'Contraentrega disponible',
+    'Decants 1.1',
+    'Asesoría personalizada',
+  ];
 
   return (
-    <div className="admin-form-page">
-      <div className="admin-form-header">
-        <h1>{isEditing ? 'Editar producto' : 'Agregar producto'}</h1>
-        <button className="admin-btn-back" onClick={() => navigate('/admin')}>
-          ← Volver
-        </button>
+    <>
+      <Navbar />
+
+      <header className="hero">
+        <div className="container hero__content">
+          <img src={logo} alt="Elixir Perfumería" className="hero__logo" />
+        </div>
+      </header>
+
+      <div className="marquee">
+        <div className="marquee__track">
+          {[...marqueeText, ...marqueeText].map((text, i) => (
+            <span key={i} className="marquee__item">
+              <span className="marquee__dot">✦</span>
+              {text}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <form className="admin-form" onSubmit={handleSubmit}>
-        <div className="admin-form__grid">
-          <div className="admin-form__left">
+      <section className="categories">
+        <div className="container categories__list">
+          <button
+            className={`category-pill ${activeCategory === 'todos' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('todos')}
+          >
+            Todos
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              className={`category-pill ${activeCategory === cat.id ? 'category-pill--active' : ''}`}
+              onClick={() => setActiveCategory(cat.id)}
+            >
+              {cat.icon} {cat.name}
+            </button>
+          ))}
+        </div>
+      </section>
 
-            <div className="form-field">
-              <label>Nombre del perfume *</label>
-              <input name="name" value={form.name} onChange={handleChange} required />
-            </div>
+      <div className="container toolbar">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="🔍 Buscar perfume..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <div className="sort-wrap">
+          <svg className="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="4" y1="6" x2="20" y2="6"/>
+            <line x1="8" y1="12" x2="20" y2="12"/>
+            <line x1="12" y1="18" x2="20" y2="18"/>
+          </svg>
+          <span className="sort-label">Filtrar:</span>
+          <select
+            className="sort-select"
+            value={activeCategory}
+            onChange={(e) => setActiveCategory(e.target.value)}
+          >
+            <option value="todos">Todos</option>
+            <optgroup label="── Precio">
+              <option value="precio_asc">Precio ↑</option>
+              <option value="precio_desc">Precio ↓</option>
+            </optgroup>
+            <optgroup label="── Especiales">
+              <option value="destacados">⭐ Destacados</option>
+              <option value="mas_vendidos">🔥 Más vendidos</option>
+              <option value="ofertas">🏷️ Ofertas</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
 
-            <div className="form-row">
-              <div className="form-field">
-                <label>Categoría *</label>
-                <select name="category" value={form.category} onChange={handleChange} required>
-                  <option value="dama">Dama</option>
-                  <option value="caballero">Caballero</option>
-                  <option value="unisex">Unisex</option>
-                  <option value="arabes_dama">Árabes Dama</option>
-                  <option value="arabes_caballero">Árabes Caballero</option>
-                  <option value="arabes_unisex">Árabes Unisex</option>
-                </select>
-              </div>
-              <div className="form-field">
-                <label>Precio normal (COP) *</label>
-                <input type="number" name="price" value={form.price} onChange={handleChange} required />
-              </div>
-            </div>
-
-            <div className="form-field">
-              <label className="promo-label">
-                <input
-                  type="checkbox"
-                  name="on_sale"
-                  checked={form.on_sale}
-                  onChange={handleChange}
-                  className="promo-checkbox"
-                />
-                ¿Este producto tiene promoción?
-              </label>
-            </div>
-
-            {form.on_sale && (
-              <div className="form-field promo-field">
-                <label>Precio con descuento (COP) *</label>
-                <input
-                  type="number"
-                  name="discount_price"
-                  value={form.discount_price}
-                  onChange={handleChange}
-                  placeholder="Ej: 236000"
-                  required={form.on_sale}
-                />
-                {form.price && form.discount_price && (
-                  <p className="promo-preview">
-                    Se verá así: <s>${Number(form.price).toLocaleString('es-CO')}</s> → <strong>${Number(form.discount_price).toLocaleString('es-CO')}</strong>
-                  </p>
-                )}
+      <main className="container product-grid">
+        {loading ? (
+          <p className="loading-text">Cargando productos...</p>
+        ) : filteredProducts.length === 0 ? (
+          <p className="loading-text">No se encontraron productos.</p>
+        ) : (
+          <>
+            {visibleProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+            {visibleCount < filteredProducts.length && (
+              <div className="load-more-wrap">
+                <button
+                  className="load-more-btn"
+                  onClick={() => setVisibleCount((prev) => prev + 10)}
+                >
+                  Ver más perfumes
+                </button>
               </div>
             )}
+          </>
+        )}
+      </main>
 
-            <div className="form-field">
-              <label className="promo-label">
-                <input
-                  type="checkbox"
-                  name="is_featured"
-                  checked={form.is_featured}
-                  onChange={handleChange}
-                  className="promo-checkbox"
-                />
-                ⭐ Producto destacado (aparece de primero)
-              </label>
-            </div>
-
-            <div className="form-field">
-              <label className="promo-label">
-                <input
-                  type="checkbox"
-                  name="is_bestseller"
-                  checked={form.is_bestseller}
-                  onChange={handleChange}
-                  className="promo-checkbox"
-                />
-                🔥 Más vendido
-              </label>
-            </div>
-
-            <div className="form-field">
-              <label>Orden de aparición (menor = primero)</label>
-              <input
-                type="number"
-                name="sort_order"
-                value={form.sort_order}
-                onChange={handleChange}
-                placeholder="0"
-                min="0"
-              />
-            </div>
-
-            <div className="form-field">
-              <label>Descripción</label>
-              <textarea name="description" value={form.description} onChange={handleChange} rows={3} />
-            </div>
-
-            <div className="form-row">
-              <div className="form-field">
-                <label>Familia olfativa</label>
-                <input name="family" value={form.family} onChange={handleChange} placeholder="Ej: Floral Afrutada" />
-              </div>
-              <div className="form-field">
-                <label>Duración</label>
-                <input name="duration" value={form.duration} onChange={handleChange} placeholder="Ej: 6 - 8 horas" />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-field">
-                <label>Intensidad</label>
-                <input name="intensity" value={form.intensity} onChange={handleChange} placeholder="Ej: Media" />
-              </div>
-              <div className="form-field">
-                <label>Ocasión</label>
-                <input name="occasion" value={form.occasion} onChange={handleChange} placeholder="Ej: Noche" />
-              </div>
-            </div>
-
-            <div className="form-field">
-              <label>Notas de salida <span className="form-hint">(separadas por coma)</span></label>
-              <input name="notes_salida" value={form.notes_salida} onChange={handleChange} placeholder="Ej: Pomelo, Limón, Bergamota" />
-            </div>
-
-            <div className="form-field">
-              <label>Notas de corazón <span className="form-hint">(separadas por coma)</span></label>
-              <input name="notes_corazon" value={form.notes_corazon} onChange={handleChange} placeholder="Ej: Rosa, Jazmín" />
-            </div>
-
-            <div className="form-field">
-              <label>Notas de fondo <span className="form-hint">(separadas por coma)</span></label>
-              <input name="notes_fondo" value={form.notes_fondo} onChange={handleChange} placeholder="Ej: Sándalo, Ámbar, Almizcle" />
-            </div>
-
-          </div>
-
-          <div className="admin-form__right">
-            <div className="form-field">
-              <label>Foto del producto</label>
-              <div className="image-upload-area">
-                {imagePreview ? (
-                  <img src={imagePreview} alt="Preview" className="image-preview" />
-                ) : (
-                  <div className="image-placeholder">
-                    <span>🧴</span>
-                    <p>Sin imagen</p>
-                  </div>
-                )}
-                <input type="file" accept="image/*" onChange={handleImageChange} className="image-input" />
-                <p className="image-hint">Haz clic para seleccionar una foto</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="admin-form__footer">
-          <button type="submit" className="admin-btn-save" disabled={loading}>
-            {loading ? 'Guardando...' : isEditing ? 'Guardar cambios' : 'Crear producto'}
-          </button>
-        </div>
-      </form>
-    </div>
+      <Reviews />
+    </>
   );
 }
 
-export default AdminProductForm;
+export default Home;
