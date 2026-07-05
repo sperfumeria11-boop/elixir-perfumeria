@@ -6,6 +6,7 @@ import { getProducts } from '../lib/productService';
 import logo from '../assets/logo.jpeg';
 import './Home.css';
 
+
 function Home() {
   const [activeCategory, setActiveCategory] = useState('todos');
   const [products, setProducts] = useState([]);

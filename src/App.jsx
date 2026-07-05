@@ -9,6 +9,7 @@ import Admin from './pages/Admin';
 import AdminProductForm from './pages/AdminProductForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import WhatsAppButton from './components/WhatsAppButton';
+import FAQPage from './pages/FAQPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/pedido-confirmado" element={<OrderConfirmed />} />
         <Route path="/admin/login" element={<Login />} />
+        <Route path="/preguntas-frecuentes" element={<FAQPage />} />
         <Route path="/admin" element={
           <ProtectedRoute>
             <Admin />
