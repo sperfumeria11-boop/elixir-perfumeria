@@ -54,9 +54,6 @@ function Navbar() {
           <button className="sidebar__link" onClick={() => handleNavigation('/')}>
             🏠 Inicio
           </button>
-          <button className="sidebar__link" onClick={() => handleNavigation('/catalogo')}>
-            🛍️ Catálogo
-          </button>
           <button className="sidebar__link" onClick={() => handleNavigation('/preguntas-frecuentes')}>
             🤔 Preguntas frecuentes
           </button>

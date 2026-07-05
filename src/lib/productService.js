@@ -73,3 +73,46 @@ export async function deleteProduct(id) {
 
   return true;
 }
+
+export async function getReviews() {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error cargando reseñas:', error);
+    return [];
+  }
+
+  return data;
+}
+
+export async function createReview(review) {
+  const { data, error } = await supabase
+    .from('reviews')
+    .insert([review])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creando reseña:', error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function deleteReview(id) {
+  const { error } = await supabase
+    .from('reviews')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error eliminando reseña:', error);
+    return false;
+  }
+
+  return true;
+}
