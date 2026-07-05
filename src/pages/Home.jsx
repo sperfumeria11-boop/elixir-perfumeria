@@ -6,7 +6,6 @@ import { getProducts } from '../lib/productService';
 import logo from '../assets/logo.jpeg';
 import './Home.css';
 
-
 function Home() {
   const [activeCategory, setActiveCategory] = useState('todos');
   const [products, setProducts] = useState([]);
@@ -30,16 +29,35 @@ function Home() {
     .filter((p) => !activeCategories || activeCategories.includes(p.category))
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
 
+  const marqueeText = [
+    'Perfumes 1.1 Premium',
+    'Envíos a todo Colombia',
+    'Elegancia en cada aroma',
+    'Contraentrega disponible',
+    'Decants 1.1',
+    'Asesoría personalizada',
+  ];
+
   return (
     <>
       <Navbar />
 
       <header className="hero">
-        <div className="container">
+        <div className="container hero__content">
           <img src={logo} alt="Elixir Perfumería" className="hero__logo" />
-          <p className="hero__subtitle">Perfumes 1.1 premium · Envíos a todo el país</p>
         </div>
       </header>
+
+      <div className="marquee">
+        <div className="marquee__track">
+          {[...marqueeText, ...marqueeText].map((text, i) => (
+            <span key={i} className="marquee__item">
+              <span className="marquee__dot">✦</span>
+              {text}
+            </span>
+          ))}
+        </div>
+      </div>
 
       <section className="categories">
         <div className="container categories__list">

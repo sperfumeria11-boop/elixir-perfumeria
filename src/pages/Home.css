@@ -15,32 +15,85 @@
   letter-spacing: 0.05em;
 }
 
+.marquee {
+  background: linear-gradient(135deg, #2B2417, #3D3020);
+  overflow: hidden;
+  padding: 12px 0;
+  width: 100%;
+}
+
+.marquee__track {
+  display: flex;
+  flex-wrap: nowrap;
+  animation: marquee 30s linear infinite;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee__track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 32px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  white-space: nowrap;
+}
+
+.marquee__dot {
+  font-size: 8px;
+  color: rgba(212, 175, 55, 0.5);
+  flex-shrink: 0;
+}
+
 .categories__list {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
+  margin-top: 32px;
 }
 
 .category-pill {
-  padding: 10px 20px;
-  border: 1px solid rgba(201, 161, 74, 0.4);
+  padding: 10px 22px;
+  border: 1.5px solid rgba(201, 161, 74, 0.35);
   border-radius: 999px;
-  color: var(--color-gold-light);
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  color: var(--color-black-warm);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all 0.25s ease;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .category-pill:hover {
   border-color: var(--color-gold);
+  background: rgba(201, 161, 74, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201, 161, 74, 0.15);
 }
 
 .category-pill--active {
-  background-color: var(--color-gold);
-  color: var(--color-black);
-  border-color: var(--color-gold);
+  background: linear-gradient(135deg, #D4AF37, #C9A14A);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(201, 161, 74, 0.35);
+  transform: translateY(-1px);
 }
 
 .product-grid {
