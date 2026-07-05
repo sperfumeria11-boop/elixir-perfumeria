@@ -5,6 +5,10 @@ function ProductCard({ product }) {
   const formattedPrice = product.price.toLocaleString('es-CO');
   const formattedDiscount = product.discount_price?.toLocaleString('es-CO');
 
+  const discountPercent = product.on_sale && product.discount_price
+    ? Math.round((1 - product.discount_price / product.price) * 100)
+    : null;
+
   return (
     <Link to={`/producto/${product.id}`} className="product-card">
       <div className="product-card__image-wrap">
@@ -13,8 +17,8 @@ function ProductCard({ product }) {
         ) : (
           <span className="product-card__placeholder-icon">🧴</span>
         )}
-        {product.on_sale && (
-          <span className="product-card__sale-badge">Oferta</span>
+        {product.on_sale && discountPercent && (
+          <span className="product-card__sale-badge">Oferta -{discountPercent}%</span>
         )}
       </div>
       <div className="product-card__info">

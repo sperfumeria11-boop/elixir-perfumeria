@@ -8,27 +8,31 @@ import Login from './pages/Login';
 import Admin from './pages/Admin';
 import AdminProductForm from './pages/AdminProductForm';
 import ProtectedRoute from './components/ProtectedRoute';
+import WhatsAppButton from './components/WhatsAppButton';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/producto/:id" element={<ProductDetail />} />
-      <Route path="/carrito" element={<Cart />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/pedido-confirmado" element={<OrderConfirmed />} />
-      <Route path="/admin/login" element={<Login />} />
-      <Route path="/admin" element={
-        <ProtectedRoute>
-          <Admin />
-        </ProtectedRoute>
-      } />
-      <Route path="/admin/producto/:id" element={
-        <ProtectedRoute>
-          <AdminProductForm />
-        </ProtectedRoute>
-      } />
-    </Routes>
+    <>
+      <WhatsAppButton />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/producto/:id" element={<ProductDetail />} />
+        <Route path="/carrito" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/pedido-confirmado" element={<OrderConfirmed />} />
+        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/producto/:id" element={
+          <ProtectedRoute>
+            <AdminProductForm />
+          </ProtectedRoute>
+        } />
+      </Routes>
+    </>
   );
 }
 
