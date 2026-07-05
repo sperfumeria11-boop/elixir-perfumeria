@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
-import { categories, specialFilters } from '../data/products';
+import { categories } from '../data/products';
 import { getProducts } from '../lib/productService';
 import logo from '../assets/logo.jpeg';
 import './Home.css';
@@ -12,8 +12,7 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [sortOrder, setSortOrder] = useState('default');
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(20);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -25,7 +24,7 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    setVisibleCount(10);
+    setVisibleCount(20);
   }, [activeCategory, search]);
 
   const filteredProducts = products
@@ -34,6 +33,7 @@ function Home() {
       if (activeCategory === 'destacados') return p.is_featured;
       if (activeCategory === 'mas_vendidos') return p.is_bestseller;
       if (activeCategory === 'ofertas') return p.on_sale;
+      if (activeCategory === 'precio_asc' || activeCategory === 'precio_desc') return true;
       const cats = categories.find((c) => c.id === activeCategory)?.includes || [activeCategory];
       return cats.includes(p.category);
     })
@@ -41,8 +41,8 @@ function Home() {
     .sort((a, b) => {
       const priceA = a.on_sale && a.discount_price ? a.discount_price : a.price;
       const priceB = b.on_sale && b.discount_price ? b.discount_price : b.price;
-      if (sortOrder === 'asc') return priceA - priceB;
-      if (sortOrder === 'desc') return priceB - priceA;
+      if (activeCategory === 'precio_asc') return priceA - priceB;
+      if (activeCategory === 'precio_desc') return priceB - priceA;
       return 0;
     });
 
@@ -95,16 +95,6 @@ function Home() {
               {cat.icon} {cat.name}
             </button>
           ))}
-          <div className="category-divider" />
-          {specialFilters.map((filter) => (
-            <button
-              key={filter.id}
-              className={`category-pill category-pill--special ${activeCategory === filter.id ? 'category-pill--active' : ''}`}
-              onClick={() => setActiveCategory(filter.id)}
-            >
-              {filter.icon} {filter.name}
-            </button>
-          ))}
         </div>
       </section>
 
@@ -122,15 +112,22 @@ function Home() {
             <line x1="8" y1="12" x2="20" y2="12"/>
             <line x1="12" y1="18" x2="20" y2="18"/>
           </svg>
-          <span className="sort-label">Ordenar:</span>
+          <span className="sort-label">Filtrar:</span>
           <select
             className="sort-select"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            value={activeCategory}
+            onChange={(e) => setActiveCategory(e.target.value)}
           >
-            <option value="default">Destacados</option>
-            <option value="asc">Precio ↑</option>
-            <option value="desc">Precio ↓</option>
+            <option value="todos">Todos</option>
+            <optgroup label="── Precio">
+              <option value="precio_asc">Precio ↑</option>
+              <option value="precio_desc">Precio ↓</option>
+            </optgroup>
+            <optgroup label="── Especiales">
+              <option value="destacados">⭐ Destacados</option>
+              <option value="mas_vendidos">🔥 Más vendidos</option>
+              <option value="ofertas">🏷️ Ofertas</option>
+            </optgroup>
           </select>
         </div>
       </div>
@@ -149,7 +146,7 @@ function Home() {
               <div className="load-more-wrap">
                 <button
                   className="load-more-btn"
-                  onClick={() => setVisibleCount((prev) => prev + 10)}
+                  onClick={() => setVisibleCount((prev) => prev + 20)}
                 >
                   Ver más perfumes
                 </button>
