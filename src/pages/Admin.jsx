@@ -1,11 +1,64 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getProducts, deleteProduct, getReviews, deleteReview, createReview } from '../lib/productService';
+import { getProducts, deleteProduct, updateProduct, getReviews, deleteReview, createReview } from '../lib/productService';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import './Admin.css';
 
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+function SortableRow({ product, onEdit, onDelete }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: product.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    background: isDragging ? 'rgba(212, 175, 55, 0.1)' : '',
+  };
+
+  return (
+    <tr ref={setNodeRef} style={style}>
+      <td>
+        <span
+          {...attributes}
+          {...listeners}
+          className="drag-handle"
+          title="Arrastra para reordenar"
+        >
+          ⠿
+        </span>
+      </td>
+      <td>{product.name}</td>
+      <td className="admin-table__category">{product.category}</td>
+      <td>${product.price.toLocaleString('es-CO')}</td>
+      <td className="admin-table__actions">
+        <button className="admin-btn-edit" onClick={() => onEdit(product.id)}>
+          Editar
+        </button>
+        <button className="admin-btn-delete" onClick={() => onDelete(product.id)}>
+          Eliminar
+        </button>
+      </td>
+    </tr>
+  );
+}
 
 function Admin() {
   const { signOut } = useAuth();
@@ -25,6 +78,13 @@ function Admin() {
   const [reviewImageFile, setReviewImageFile] = useState(null);
   const [reviewImagePreview, setReviewImagePreview] = useState(null);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   useEffect(() => {
     fetchAll();
   }, []);
@@ -34,6 +94,23 @@ function Admin() {
     setProducts(p);
     setReviews(r);
     setLoading(false);
+  }
+
+  async function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = products.findIndex((p) => p.id === active.id);
+    const newIndex = products.findIndex((p) => p.id === over.id);
+    const newOrder = arrayMove(products, oldIndex, newIndex);
+
+    setProducts(newOrder);
+
+    await Promise.all(
+      newOrder.map((product, index) =>
+        updateProduct(product.id, { sort_order: index })
+      )
+    );
   }
 
   async function handleDeleteProduct(id) {
@@ -122,39 +199,41 @@ function Admin() {
           {loading ? (
             <p className="admin-loading">Cargando...</p>
           ) : (
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Categoría</th>
-                  <th>Precio</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product.id}>
-                    <td>{product.name}</td>
-                    <td className="admin-table__category">{product.category}</td>
-                    <td>${product.price.toLocaleString('es-CO')}</td>
-                    <td className="admin-table__actions">
-                      <button
-                        className="admin-btn-edit"
-                        onClick={() => navigate(`/admin/producto/${product.id}`)}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="admin-btn-delete"
-                        onClick={() => handleDeleteProduct(product.id)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <>
+              <p className="admin-drag-hint">⠿ Arrastra los productos para cambiar el orden en que aparecen en la tienda</p>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={products.map((p) => p.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th style={{ width: '40px' }}></th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {products.map((product) => (
+                        <SortableRow
+                          key={product.id}
+                          product={product}
+                          onEdit={(id) => navigate(`/admin/producto/${id}`)}
+                          onDelete={handleDeleteProduct}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                </SortableContext>
+              </DndContext>
+            </>
           )}
         </main>
       )}

@@ -198,3 +198,25 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
+
+.drag-handle {
+  cursor: grab;
+  font-size: 18px;
+  color: var(--color-bronze);
+  padding: 0 8px;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.admin-drag-hint {
+  font-size: 13px;
+  color: var(--color-bronze);
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  background: rgba(201, 161, 74, 0.08);
+  border-radius: 8px;
+  border-left: 3px solid var(--color-gold);
+}
