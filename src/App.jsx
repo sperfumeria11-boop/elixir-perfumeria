@@ -17,12 +17,11 @@ function App() {
       <WhatsAppButton />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/producto/:id" element={<ProductDetail />} />
         <Route path="/carrito" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/pedido-confirmado" element={<OrderConfirmed />} />
-        <Route path="/admin/login" element={<Login />} />
         <Route path="/preguntas-frecuentes" element={<FAQPage />} />
+        <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={
           <ProtectedRoute>
             <Admin />
@@ -33,6 +32,7 @@ function App() {
             <AdminProductForm />
           </ProtectedRoute>
         } />
+        <Route path="/producto/:id" element={<ProductDetail />} />
       </Routes>
     </>
   );
