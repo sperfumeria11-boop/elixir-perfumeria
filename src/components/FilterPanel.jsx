@@ -55,6 +55,8 @@ function FilterPanel({ isOpen, onClose, activeCategory, onCategoryChange, active
                   { id: 'caballero', label: 'Caballero' },
                   { id: 'arabes_dama', label: 'Árabes Dama' },
                   { id: 'arabes_caballero', label: 'Árabes Caballero' },
+                  { id: 'decants', label: 'Decants' },
+                  { id: 'sets', label: 'Sets / Combos' },
               ].map((cat) => (
                 <button
                   key={cat.id}

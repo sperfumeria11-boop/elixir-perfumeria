@@ -43,6 +43,8 @@ function Home() {
           caballero: ['caballero', 'unisex'],
           arabes_dama: ['arabes_dama', 'arabes_unisex'],
           arabes_caballero: ['arabes_caballero', 'arabes_unisex'],
+          decants: ['decants'],
+          sets: ['sets'],
         }[activeCategory] || [activeCategory];
         if (!includes.includes(p.category)) return false;
       }
@@ -146,6 +148,18 @@ function Home() {
             onClick={() => setActiveCategory('arabes_caballero')}
           >
             🌙 Árabes Caballero
+          </button>
+          <button
+            className={`category-pill ${activeCategory === 'decants' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('decants')}
+          >
+            🧪 Decants
+          </button>
+          <button
+            className={`category-pill ${activeCategory === 'sets' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('sets')}
+          >
+            🎁 Sets
           </button>
         </div>
       </section>
