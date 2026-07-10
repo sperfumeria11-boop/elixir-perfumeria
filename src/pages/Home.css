@@ -232,14 +232,14 @@
   }
 
   .toolbar {
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
     margin-top: 16px;
   }
 
   .filter-btn {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    flex-shrink: 0;
   }
 
   .product-grid {
