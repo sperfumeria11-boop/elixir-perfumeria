@@ -1,14 +1,14 @@
 import './FilterPanel.css';
 
 const familyGroups = [
-  { id: 'floral', label: '🌸 Floral', keywords: ['floral'] },
-  { id: 'citrico', label: '🍋 Cítrico', keywords: ['cítrica', 'citrica'] },
-  { id: 'amaderado', label: '🌲 Amaderado', keywords: ['amaderada', 'amaderado'] },
-  { id: 'dulce', label: '🍯 Dulce/Gourmand', keywords: ['gourmand', 'vainill', 'ámbar', 'ambar', 'amber'] },
-  { id: 'oriental', label: '🌙 Oriental', keywords: ['oriental'] },
-  { id: 'fresco', label: '🌊 Fresco/Acuático', keywords: ['acuática', 'acuatica', 'fresca', 'fresco'] },
-  { id: 'frutal', label: '🍎 Frutal', keywords: ['frutal'] },
-  { id: 'aromatico', label: '🌿 Aromático', keywords: ['aromática', 'aromatica', 'fougère', 'fougere'] },
+  { id: 'floral', label: 'Floral', keywords: ['floral'] },
+  { id: 'citrico', label: 'Cítrico', keywords: ['cítrica', 'citrica'] },
+  { id: 'amaderado', label: 'Amaderado', keywords: ['amaderada', 'amaderado'] },
+  { id: 'dulce', label: 'Dulce / Gourmand', keywords: ['gourmand', 'vainill', 'ámbar', 'ambar', 'amber'] },
+  { id: 'oriental', label: 'Oriental', keywords: ['oriental'] },
+  { id: 'fresco', label: 'Fresco / Acuático', keywords: ['acuática', 'acuatica', 'fresca', 'fresco'] },
+  { id: 'frutal', label: 'Frutal', keywords: ['frutal'] },
+  { id: 'aromatico', label: 'Aromático', keywords: ['aromática', 'aromatica', 'fougère', 'fougere'] },
 ];
 
 function FilterPanel({ isOpen, onClose, activeCategory, onCategoryChange, activeFamilies, onFamilyChange, activeSpecial, onSpecialChange }) {
@@ -50,11 +50,11 @@ function FilterPanel({ isOpen, onClose, activeCategory, onCategoryChange, active
             <h3 className="filter-section__title">Categoría</h3>
             <div className="filter-options">
               {[
-                { id: 'todos', label: 'Todos' },
-                { id: 'dama', label: '🌸 Dama' },
-                { id: 'caballero', label: '🖤 Caballero' },
-                { id: 'arabes_dama', label: '🌙 Árabes Dama' },
-                { id: 'arabes_caballero', label: '🌙 Árabes Caballero' },
+                  { id: 'todos', label: 'Todos' },
+                  { id: 'dama', label: 'Dama' },
+                  { id: 'caballero', label: 'Caballero' },
+                  { id: 'arabes_dama', label: 'Árabes Dama' },
+                  { id: 'arabes_caballero', label: 'Árabes Caballero' },
               ].map((cat) => (
                 <button
                   key={cat.id}
@@ -86,9 +86,9 @@ function FilterPanel({ isOpen, onClose, activeCategory, onCategoryChange, active
             <h3 className="filter-section__title">Especiales</h3>
             <div className="filter-options">
               {[
-                { id: 'destacados', label: '⭐ Destacados' },
-                { id: 'mas_vendidos', label: '🔥 Más vendidos' },
-                { id: 'ofertas', label: '🏷️ Ofertas' },
+                { id: 'destacados', label: 'Destacados' },
+                { id: 'mas_vendidos', label: 'Más vendidos' },
+                { id: 'ofertas', label: 'Ofertas' },
               ].map((special) => (
                 <button
                   key={special.id}

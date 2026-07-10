@@ -69,7 +69,10 @@ function Home() {
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 
-  const activeFiltersCount = (activeCategory !== 'todos' ? 1 : 0) + activeFamilies.length + (activeSpecial ? 1 : 0);
+  const activeFiltersCount =
+    (activeCategory !== 'todos' ? 1 : 0) +
+    activeFamilies.length +
+    (activeSpecial ? 1 : 0);
 
   const marqueeText = [
     'Perfumes 1.1 Premium',
@@ -113,10 +116,7 @@ function Home() {
       </div>
 
       <div className="container toolbar">
-        <button
-          className="filter-btn"
-          onClick={() => setFilterOpen(true)}
-        >
+        <button className="filter-btn" onClick={() => setFilterOpen(true)}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
             <line x1="4" y1="6" x2="20" y2="6"/>
             <line x1="8" y1="12" x2="16" y2="12"/>
