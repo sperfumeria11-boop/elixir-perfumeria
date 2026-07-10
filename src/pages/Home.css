@@ -64,18 +64,18 @@
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
-  margin-top: 32px;
+  margin-top: 28px;
+  padding-bottom: 20px;
 }
 
 .category-pill {
-  padding: 10px 22px;
+  padding: 10px 24px;
   border: 1.5px solid rgba(201, 161, 74, 0.35);
   border-radius: 999px;
   color: var(--color-black-warm);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   transition: all 0.25s ease;
   background: white;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
@@ -84,16 +84,16 @@
 .category-pill:hover {
   border-color: var(--color-gold);
   background: rgba(201, 161, 74, 0.08);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(201, 161, 74, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(201, 161, 74, 0.15);
 }
 
 .category-pill--active {
   background: linear-gradient(135deg, #D4AF37, #C9A14A);
   color: white;
   border-color: transparent;
-  box-shadow: 0 4px 16px rgba(201, 161, 74, 0.35);
-  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(201, 161, 74, 0.4);
+  transform: translateY(-2px);
 }
 
 .toolbar {
@@ -102,6 +102,42 @@
   gap: 12px;
   margin-bottom: 24px;
   margin-top: 24px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid rgba(201, 161, 74, 0.3);
+  border-radius: 999px;
+  background: white;
+  color: var(--color-black-warm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-gold);
+  background: rgba(201, 161, 74, 0.06);
+}
+
+.filter-btn__count {
+  background: var(--color-gold);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-bar {
@@ -119,48 +155,6 @@
 
 .search-bar:focus {
   border-color: var(--color-gold);
-}
-
-.sort-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border: 1px solid rgba(201, 161, 74, 0.3);
-  border-radius: 999px;
-  background: white;
-  transition: border-color 0.2s ease;
-  white-space: nowrap;
-}
-
-.sort-wrap:hover {
-  border-color: var(--color-gold);
-}
-
-.sort-icon {
-  width: 16px;
-  height: 16px;
-  color: var(--color-bronze);
-  flex-shrink: 0;
-  display: block;
-}
-
-.sort-label {
-  font-size: 13px;
-  color: var(--color-bronze);
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-.sort-select {
-  border: none;
-  background: none;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--color-black-warm);
-  cursor: pointer;
-  outline: none;
-  padding: 0;
 }
 
 .product-grid {
@@ -219,29 +213,31 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 32px 0 24px;
+    padding: 24px 0 16px;
   }
 
   .hero__logo {
-    max-width: 180px;
+    max-width: 160px;
   }
 
   .categories__list {
     gap: 8px;
-    margin-bottom: 16px;
+    margin-top: 20px;
+    padding-bottom: 12px;
   }
 
   .category-pill {
-    padding: 8px 14px;
+    padding: 8px 16px;
     font-size: 12px;
   }
 
   .toolbar {
     flex-direction: column;
     gap: 8px;
+    margin-top: 16px;
   }
 
-  .sort-wrap {
+  .filter-btn {
     width: 100%;
     justify-content: center;
   }
@@ -250,53 +246,4 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-
-  .category-divider {
-    width: 1px;
-    height: 24px;
-    background: rgba(201, 161, 74, 0.3);
-    margin: 0 4px;
-    align-self: center;
-    }
-
-  .category-pill--special {
-    border-style: dashed;
-  }
-
-  .filter-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border: 1px solid rgba(201, 161, 74, 0.3);
-  border-radius: 999px;
-  background: white;
-  color: var(--color-black-warm);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.filter-btn:hover {
-  border-color: var(--color-gold);
-  background: rgba(201, 161, 74, 0.06);
-}
-
-.filter-btn__count {
-  background: var(--color-gold);
-  color: white;
-  font-size: 11px;
-  font-weight: 700;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 }

@@ -115,6 +115,41 @@ function Home() {
         </div>
       </div>
 
+      <section className="categories">
+        <div className="container categories__list">
+          <button
+            className={`category-pill ${activeCategory === 'todos' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('todos')}
+          >
+            Todos
+          </button>
+          <button
+            className={`category-pill ${activeCategory === 'dama' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('dama')}
+          >
+            🌸 Dama
+          </button>
+          <button
+            className={`category-pill ${activeCategory === 'caballero' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('caballero')}
+          >
+            🖤 Caballero
+          </button>
+          <button
+            className={`category-pill ${activeCategory === 'arabes_dama' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('arabes_dama')}
+          >
+            🌙 Árabes Dama
+          </button>
+          <button
+            className={`category-pill ${activeCategory === 'arabes_caballero' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('arabes_caballero')}
+          >
+            🌙 Árabes Caballero
+          </button>
+        </div>
+      </section>
+
       <div className="container toolbar">
         <button className="filter-btn" onClick={() => setFilterOpen(true)}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
