@@ -23,6 +23,18 @@ import './Admin.css';
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
+const CATEGORIES = [
+  { value: '', label: 'Todas las categorías' },
+  { value: 'dama', label: 'Dama' },
+  { value: 'caballero', label: 'Caballero' },
+  { value: 'unisex', label: 'Unisex' },
+  { value: 'arabes_dama', label: 'Árabes Dama' },
+  { value: 'arabes_caballero', label: 'Árabes Caballero' },
+  { value: 'arabes_unisex', label: 'Árabes Unisex' },
+  { value: 'decants', label: 'Decants' },
+  { value: 'sets', label: 'Sets / Combos' },
+];
+
 function SortableRow({ product, onEdit, onDelete }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: product.id });
 
@@ -36,12 +48,7 @@ function SortableRow({ product, onEdit, onDelete }) {
   return (
     <tr ref={setNodeRef} style={style}>
       <td>
-        <span
-          {...attributes}
-          {...listeners}
-          className="drag-handle"
-          title="Arrastra para reordenar"
-        >
+        <span {...attributes} {...listeners} className="drag-handle" title="Arrastra para reordenar">
           ⠿
         </span>
       </td>
@@ -49,12 +56,8 @@ function SortableRow({ product, onEdit, onDelete }) {
       <td className="admin-table__category">{product.category}</td>
       <td>${product.price.toLocaleString('es-CO')}</td>
       <td className="admin-table__actions">
-        <button className="admin-btn-edit" onClick={() => onEdit(product.id)}>
-          Editar
-        </button>
-        <button className="admin-btn-delete" onClick={() => onDelete(product.id)}>
-          Eliminar
-        </button>
+        <button className="admin-btn-edit" onClick={() => onEdit(product.id)}>Editar</button>
+        <button className="admin-btn-delete" onClick={() => onDelete(product.id)}>Eliminar</button>
       </td>
     </tr>
   );
@@ -67,27 +70,21 @@ function Admin() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('productos');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewForm, setReviewForm] = useState({
-    name: '',
-    review: '',
-    rating: 5,
-    product_name: '',
-    image_url: '',
+    name: '', review: '', rating: 5, product_name: '', image_url: '',
   });
   const [reviewImageFile, setReviewImageFile] = useState(null);
   const [reviewImagePreview, setReviewImagePreview] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  useEffect(() => {
-    fetchAll();
-  }, []);
+  useEffect(() => { fetchAll(); }, []);
 
   async function fetchAll() {
     const [p, r] = await Promise.all([getProducts(), getReviews()]);
@@ -99,18 +96,11 @@ function Admin() {
   async function handleDragEnd(event) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-
     const oldIndex = products.findIndex((p) => p.id === active.id);
     const newIndex = products.findIndex((p) => p.id === over.id);
     const newOrder = arrayMove(products, oldIndex, newIndex);
-
     setProducts(newOrder);
-
-    await Promise.all(
-      newOrder.map((product, index) =>
-        updateProduct(product.id, { sort_order: index })
-      )
-    );
+    await Promise.all(newOrder.map((product, index) => updateProduct(product.id, { sort_order: index })));
   }
 
   async function handleDeleteProduct(id) {
@@ -130,10 +120,7 @@ function Admin() {
     const data = new FormData();
     data.append('file', reviewImageFile);
     data.append('upload_preset', UPLOAD_PRESET);
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-      method: 'POST',
-      body: data,
-    });
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: data });
     const result = await res.json();
     return result.secure_url;
   }
@@ -141,11 +128,7 @@ function Admin() {
   async function handleCreateReview(e) {
     e.preventDefault();
     const image_url = await uploadReviewImage();
-    await createReview({
-      ...reviewForm,
-      rating: Number(reviewForm.rating),
-      image_url,
-    });
+    await createReview({ ...reviewForm, rating: Number(reviewForm.rating), image_url });
     setReviewForm({ name: '', review: '', rating: 5, product_name: '', image_url: '' });
     setReviewImageFile(null);
     setReviewImagePreview(null);
@@ -157,6 +140,10 @@ function Admin() {
     await signOut();
     navigate('/admin/login');
   }
+
+  const filteredProducts = products
+    .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter((p) => categoryFilter ? p.category === categoryFilter : true);
 
   return (
     <div className="admin">
@@ -173,66 +160,115 @@ function Admin() {
               + Agregar reseña
             </button>
           )}
-          <button className="admin-btn-signout" onClick={handleSignOut}>
-            Cerrar sesión
-          </button>
+          <button className="admin-btn-signout" onClick={handleSignOut}>Cerrar sesión</button>
         </div>
       </header>
 
       <div className="admin-tabs">
-        <button
-          className={`admin-tab ${activeTab === 'productos' ? 'admin-tab--active' : ''}`}
-          onClick={() => setActiveTab('productos')}
-        >
+        <button className={`admin-tab ${activeTab === 'productos' ? 'admin-tab--active' : ''}`} onClick={() => setActiveTab('productos')}>
           📦 Productos
         </button>
-        <button
-          className={`admin-tab ${activeTab === 'reseñas' ? 'admin-tab--active' : ''}`}
-          onClick={() => setActiveTab('reseñas')}
-        >
+        <button className={`admin-tab ${activeTab === 'reseñas' ? 'admin-tab--active' : ''}`} onClick={() => setActiveTab('reseñas')}>
           ⭐ Reseñas
         </button>
       </div>
 
       {activeTab === 'productos' && (
         <main className="admin-main">
+          <div className="admin-search-bar">
+            <div className="admin-search-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="admin-search-icon">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                type="text"
+                placeholder="Buscar producto..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="admin-search-input"
+              />
+              {searchQuery && (
+                <button className="admin-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+              )}
+            </div>
+            <select
+              className="admin-category-filter"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>{cat.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <p className="admin-results-count">
+            {filteredProducts.length === products.length
+              ? `${products.length} productos en total`
+              : `Mostrando ${filteredProducts.length} de ${products.length} productos`
+            }
+          </p>
+
           {loading ? (
             <p className="admin-loading">Cargando...</p>
           ) : (
             <>
-              <p className="admin-drag-hint">⠿ Arrastra los productos para cambiar el orden en que aparecen en la tienda</p>
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={products.map((p) => p.id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th style={{ width: '40px' }}></th>
-                        <th>Nombre</th>
-                        <th>Categoría</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
+              {searchQuery || categoryFilter ? (
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: '40px' }}></th>
+                      <th>Nombre</th>
+                      <th>Categoría</th>
+                      <th>Precio</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredProducts.map((product) => (
+                      <tr key={product.id}>
+                        <td></td>
+                        <td>{product.name}</td>
+                        <td className="admin-table__category">{product.category}</td>
+                        <td>${product.price.toLocaleString('es-CO')}</td>
+                        <td className="admin-table__actions">
+                          <button className="admin-btn-edit" onClick={() => navigate(`/admin/producto/${product.id}`)}>Editar</button>
+                          <button className="admin-btn-delete" onClick={() => handleDeleteProduct(product.id)}>Eliminar</button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {products.map((product) => (
-                        <SortableRow
-                          key={product.id}
-                          product={product}
-                          onEdit={(id) => navigate(`/admin/producto/${id}`)}
-                          onDelete={handleDeleteProduct}
-                        />
-                      ))}
-                    </tbody>
-                  </table>
-                </SortableContext>
-              </DndContext>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <>
+                  <p className="admin-drag-hint">⠿ Arrastra los productos para cambiar el orden en que aparecen en la tienda</p>
+                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={products.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+                      <table className="admin-table">
+                        <thead>
+                          <tr>
+                            <th style={{ width: '40px' }}></th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {products.map((product) => (
+                            <SortableRow
+                              key={product.id}
+                              product={product}
+                              onEdit={(id) => navigate(`/admin/producto/${id}`)}
+                              onDelete={handleDeleteProduct}
+                            />
+                          ))}
+                        </tbody>
+                      </table>
+                    </SortableContext>
+                  </DndContext>
+                </>
+              )}
             </>
           )}
         </main>
@@ -246,19 +282,11 @@ function Admin() {
               <div className="form-row">
                 <div className="form-field">
                   <label>Nombre del cliente *</label>
-                  <input
-                    type="text"
-                    value={reviewForm.name}
-                    onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
-                    required
-                  />
+                  <input type="text" value={reviewForm.name} onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })} required />
                 </div>
                 <div className="form-field">
                   <label>Calificación *</label>
-                  <select
-                    value={reviewForm.rating}
-                    onChange={(e) => setReviewForm({ ...reviewForm, rating: e.target.value })}
-                  >
+                  <select value={reviewForm.rating} onChange={(e) => setReviewForm({ ...reviewForm, rating: e.target.value })}>
                     <option value={5}>⭐⭐⭐⭐⭐ 5 estrellas</option>
                     <option value={4}>⭐⭐⭐⭐ 4 estrellas</option>
                     <option value={3}>⭐⭐⭐ 3 estrellas</option>
@@ -267,66 +295,34 @@ function Admin() {
                   </select>
                 </div>
               </div>
-
               <div className="form-field">
                 <label>Producto (opcional)</label>
-                <input
-                  type="text"
-                  placeholder="Ej: Versace Eros"
-                  value={reviewForm.product_name}
-                  onChange={(e) => setReviewForm({ ...reviewForm, product_name: e.target.value })}
-                />
+                <input type="text" placeholder="Ej: Versace Eros" value={reviewForm.product_name} onChange={(e) => setReviewForm({ ...reviewForm, product_name: e.target.value })} />
               </div>
-
               <div className="form-field">
                 <label>Foto del cliente (opcional)</label>
                 <div className="image-upload-area">
                   {reviewImagePreview ? (
                     <img src={reviewImagePreview} alt="Preview" className="image-preview" />
                   ) : (
-                    <div className="image-placeholder">
-                      <span>📷</span>
-                      <p>Sin foto</p>
-                    </div>
+                    <div className="image-placeholder"><span>📷</span><p>Sin foto</p></div>
                   )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="image-input"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (!file) return;
-                      setReviewImageFile(file);
-                      setReviewImagePreview(URL.createObjectURL(file));
-                    }}
-                  />
+                  <input type="file" accept="image/*" className="image-input" onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    setReviewImageFile(file);
+                    setReviewImagePreview(URL.createObjectURL(file));
+                  }} />
                   <p className="image-hint">Haz clic para seleccionar una foto</p>
                 </div>
               </div>
-
               <div className="form-field">
                 <label>Reseña *</label>
-                <textarea
-                  rows={3}
-                  value={reviewForm.review}
-                  onChange={(e) => setReviewForm({ ...reviewForm, review: e.target.value })}
-                  required
-                />
+                <textarea rows={3} value={reviewForm.review} onChange={(e) => setReviewForm({ ...reviewForm, review: e.target.value })} required />
               </div>
-
               <div className="review-form__actions">
                 <button type="submit" className="admin-btn-add">Guardar reseña</button>
-                <button
-                  type="button"
-                  className="admin-btn-signout"
-                  onClick={() => {
-                    setShowReviewForm(false);
-                    setReviewImageFile(null);
-                    setReviewImagePreview(null);
-                  }}
-                >
-                  Cancelar
-                </button>
+                <button type="button" className="admin-btn-signout" onClick={() => { setShowReviewForm(false); setReviewImageFile(null); setReviewImagePreview(null); }}>Cancelar</button>
               </div>
             </form>
           )}
@@ -354,20 +350,11 @@ function Admin() {
                     <td>{review.product_name || '—'}</td>
                     <td>
                       {review.image_url ? (
-                        <img
-                          src={review.image_url}
-                          alt={review.name}
-                          style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }}
-                        />
+                        <img src={review.image_url} alt={review.name} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} />
                       ) : '—'}
                     </td>
                     <td>
-                      <button
-                        className="admin-btn-delete"
-                        onClick={() => handleDeleteReview(review.id)}
-                      >
-                        Eliminar
-                      </button>
+                      <button className="admin-btn-delete" onClick={() => handleDeleteReview(review.id)}>Eliminar</button>
                     </td>
                   </tr>
                 ))}
