@@ -96,11 +96,26 @@ function Admin() {
   async function handleDragEnd(event) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const oldIndex = products.findIndex((p) => p.id === active.id);
-    const newIndex = products.findIndex((p) => p.id === over.id);
-    const newOrder = arrayMove(products, oldIndex, newIndex);
-    setProducts(newOrder);
-    await Promise.all(newOrder.map((product, index) => updateProduct(product.id, { sort_order: index })));
+
+    const oldIndex = filteredProducts.findIndex((p) => p.id === active.id);
+    const newIndex = filteredProducts.findIndex((p) => p.id === over.id);
+    const reordered = arrayMove(filteredProducts, oldIndex, newIndex);
+
+    const newProducts = products.map((p) => {
+      const reorderedIndex = reordered.findIndex((r) => r.id === p.id);
+      if (reorderedIndex !== -1) {
+        return { ...p, sort_order: reorderedIndex };
+      }
+      return p;
+    });
+
+    setProducts(newProducts);
+
+    await Promise.all(
+      reordered.map((product, index) =>
+        updateProduct(product.id, { sort_order: index })
+      )
+    );
   }
 
   async function handleDeleteProduct(id) {
@@ -213,7 +228,7 @@ function Admin() {
             <p className="admin-loading">Cargando...</p>
           ) : (
             <>
-              {searchQuery || categoryFilter ? (
+              {searchQuery ? (
                 <table className="admin-table">
                   <thead>
                     <tr>
@@ -241,9 +256,12 @@ function Admin() {
                 </table>
               ) : (
                 <>
-                  <p className="admin-drag-hint">⠿ Arrastra los productos para cambiar el orden en que aparecen en la tienda</p>
+                  <p className="admin-drag-hint">
+                    ⠿ Arrastra los productos para cambiar el orden
+                    {categoryFilter && ` dentro de "${CATEGORIES.find(c => c.value === categoryFilter)?.label}"`}
+                  </p>
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={products.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+                    <SortableContext items={filteredProducts.map((p) => p.id)} strategy={verticalListSortingStrategy}>
                       <table className="admin-table">
                         <thead>
                           <tr>
@@ -255,7 +273,7 @@ function Admin() {
                           </tr>
                         </thead>
                         <tbody>
-                          {products.map((product) => (
+                          {filteredProducts.map((product) => (
                             <SortableRow
                               key={product.id}
                               product={product}
@@ -322,7 +340,11 @@ function Admin() {
               </div>
               <div className="review-form__actions">
                 <button type="submit" className="admin-btn-add">Guardar reseña</button>
-                <button type="button" className="admin-btn-signout" onClick={() => { setShowReviewForm(false); setReviewImageFile(null); setReviewImagePreview(null); }}>Cancelar</button>
+                <button type="button" className="admin-btn-signout" onClick={() => {
+                  setShowReviewForm(false);
+                  setReviewImageFile(null);
+                  setReviewImagePreview(null);
+                }}>Cancelar</button>
               </div>
             </form>
           )}
