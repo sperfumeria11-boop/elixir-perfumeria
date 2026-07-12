@@ -99,17 +99,20 @@ function Admin() {
 
     const oldIndex = filteredProducts.findIndex((p) => p.id === active.id);
     const newIndex = filteredProducts.findIndex((p) => p.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
     const reordered = arrayMove(filteredProducts, oldIndex, newIndex);
 
-    const newProducts = products.map((p) => {
-      const reorderedIndex = reordered.findIndex((r) => r.id === p.id);
-      if (reorderedIndex !== -1) {
-        return { ...p, sort_order: reorderedIndex };
+    const updatedProducts = [...products];
+    reordered.forEach((product, index) => {
+      const globalIndex = updatedProducts.findIndex((p) => p.id === product.id);
+      if (globalIndex !== -1) {
+        updatedProducts[globalIndex] = { ...product, sort_order: index };
       }
-      return p;
     });
 
-    setProducts(newProducts);
+    setProducts(updatedProducts);
 
     await Promise.all(
       reordered.map((product, index) =>
@@ -258,7 +261,7 @@ function Admin() {
                 <>
                   <p className="admin-drag-hint">
                     ⠿ Arrastra los productos para cambiar el orden
-                    {categoryFilter && ` dentro de "${CATEGORIES.find(c => c.value === categoryFilter)?.label}"`}
+                    {categoryFilter && ` en "${CATEGORIES.find(c => c.value === categoryFilter)?.label}"`}
                   </p>
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={filteredProducts.map((p) => p.id)} strategy={verticalListSortingStrategy}>
