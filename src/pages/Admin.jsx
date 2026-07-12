@@ -97,22 +97,23 @@ function Admin() {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = filteredProducts.findIndex((p) => p.id === active.id);
-    const newIndex = filteredProducts.findIndex((p) => p.id === over.id);
+    const currentList = categoryFilter
+      ? products.filter((p) => p.category === categoryFilter)
+      : products;
+
+    const oldIndex = currentList.findIndex((p) => p.id === active.id);
+    const newIndex = currentList.findIndex((p) => p.id === over.id);
 
     if (oldIndex === -1 || newIndex === -1) return;
 
-    const reordered = arrayMove(filteredProducts, oldIndex, newIndex);
+    const reordered = arrayMove(currentList, oldIndex, newIndex);
 
-    const updatedProducts = [...products];
-    reordered.forEach((product, index) => {
-      const globalIndex = updatedProducts.findIndex((p) => p.id === product.id);
-      if (globalIndex !== -1) {
-        updatedProducts[globalIndex] = { ...product, sort_order: index };
-      }
-    });
-
-    setProducts(updatedProducts);
+    if (categoryFilter) {
+      const otherProducts = products.filter((p) => p.category !== categoryFilter);
+      setProducts([...otherProducts, ...reordered]);
+    } else {
+      setProducts(reordered);
+    }
 
     await Promise.all(
       reordered.map((product, index) =>
