@@ -50,14 +50,14 @@ function FilterPanel({ isOpen, onClose, activeCategory, onCategoryChange, active
             <h3 className="filter-section__title">Categoría</h3>
             <div className="filter-options">
               {[
-                  { id: 'todos', label: 'Todos' },
-                  { id: 'dama', label: 'Dama' },
-                  { id: 'caballero', label: 'Caballero' },
-                  { id: 'arabes_dama', label: 'Árabes Dama' },
-                  { id: 'arabes_caballero', label: 'Árabes Caballero' },
-                  { id: 'decants', label: 'Decants' },
-                  { id: 'sets', label: 'Sets / Combos' },
-                  { id: 'combos', label: 'Combos' },
+                { id: 'todos', label: 'Todos' },
+                { id: 'dama', label: 'Dama' },
+                { id: 'caballero', label: 'Caballero' },
+                { id: 'arabes_dama', label: 'Árabes Dama' },
+                { id: 'arabes_caballero', label: 'Árabes Caballero' },
+                { id: 'decants', label: 'Decants' },
+                { id: 'sets', label: 'Sets' },
+                { id: 'combos', label: 'Combos' },
               ].map((cat) => (
                 <button
                   key={cat.id}
