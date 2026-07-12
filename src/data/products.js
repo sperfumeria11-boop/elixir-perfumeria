@@ -7,6 +7,7 @@ export const categories = [
   { id: 'arabes_caballero', name: 'Árabes Caballero', icon: '🌙', includes: ['arabes_caballero', 'arabes_unisex'] },
   { id: 'decants', name: 'Decants', icon: '🧪', includes: ['decants'] },
   { id: 'sets', name: 'Sets', icon: '🎁', includes: ['sets'] },
+  { id: 'combos', name: 'Combos', icon: '🛍️', includes: ['combos'] },
 ];
 
 export const specialFilters = [

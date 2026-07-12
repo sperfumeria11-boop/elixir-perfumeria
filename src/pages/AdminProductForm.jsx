@@ -153,6 +153,7 @@ function AdminProductForm() {
                   <option value="arabes_unisex">Árabes Unisex</option>
                   <option value="decants">Decants</option>
                   <option value="sets">Sets / Combos</option>
+                  <option value="combos">Combos</option>
                 </select>
               </div>
               <div className="form-field">

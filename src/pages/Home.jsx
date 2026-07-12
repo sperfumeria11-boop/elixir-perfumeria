@@ -45,6 +45,7 @@ function Home() {
           arabes_caballero: ['arabes_caballero', 'arabes_unisex'],
           decants: ['decants'],
           sets: ['sets'],
+          combos: ['combos'],
         }[activeCategory] || [activeCategory];
         if (!includes.includes(p.category)) return false;
       }
@@ -161,7 +162,14 @@ function Home() {
           >
             🎁 Sets
           </button>
+          <button
+            className={`category-pill ${activeCategory === 'combos' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('combos')}
+          >
+            🛍️ Combos
+          </button>
         </div>
+          
       </section>
 
       <div className="container toolbar">

@@ -33,6 +33,7 @@ const CATEGORIES = [
   { value: 'arabes_unisex', label: 'Árabes Unisex' },
   { value: 'decants', label: 'Decants' },
   { value: 'sets', label: 'Sets / Combos' },
+  { value: 'combos', label: 'Combos' },
 ];
 
 function SortableRow({ product, onEdit, onDelete }) {
