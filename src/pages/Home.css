@@ -77,7 +77,7 @@
 }
 
 .category-pill {
-  padding: 10px 24px;
+  padding: 10px 20px;
   border: 1.5px solid rgba(201, 161, 74, 0.35);
   border-radius: 999px;
   color: var(--color-black-warm);
@@ -87,6 +87,8 @@
   transition: all 0.25s ease;
   background: white;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .category-pill:hover {
