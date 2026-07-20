@@ -61,11 +61,19 @@
 
 .categories__list {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin-top: 28px;
-  padding-bottom: 20px;
+  padding-bottom: 12px;
+  padding-left: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.categories__list::-webkit-scrollbar {
+  display: none;
 }
 
 .category-pill {
