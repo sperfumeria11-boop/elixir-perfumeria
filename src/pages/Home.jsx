@@ -46,6 +46,7 @@ function Home() {
           decants: ['decants'],
           sets: ['sets'],
           combos: ['combos'],
+          originales: ['originales'],
         }[activeCategory] || [activeCategory];
         if (!includes.includes(p.category)) return false;
       }
@@ -168,8 +169,13 @@ function Home() {
           >
             🛍️ Combos
           </button>
+          <button
+            className={`category-pill ${activeCategory === 'originales' ? 'category-pill--active' : ''}`}
+            onClick={() => setActiveCategory('originales')}
+          >
+            ✨ Originales
+          </button>
         </div>
-          
       </section>
 
       <div className="container toolbar">
