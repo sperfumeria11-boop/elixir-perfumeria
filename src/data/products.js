@@ -8,6 +8,7 @@ export const categories = [
   { id: 'decants', name: 'Decants', icon: '🧪', includes: ['decants'] },
   { id: 'sets', name: 'Sets', icon: '🎁', includes: ['sets'] },
   { id: 'combos', name: 'Combos', icon: '🛍️', includes: ['combos'] },
+  { id: 'originales', name: 'Originales', icon: '✨', includes: ['originales'] }
 ];
 
 export const specialFilters = [

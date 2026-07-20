@@ -34,6 +34,7 @@ const CATEGORIES = [
   { value: 'decants', label: 'Decants' },
   { value: 'sets', label: 'Sets / Combos' },
   { value: 'combos', label: 'Combos' },
+  { value: 'originales', label: 'Originales' },
 ];
 
 function SortableRow({ product, onEdit, onDelete }) {
